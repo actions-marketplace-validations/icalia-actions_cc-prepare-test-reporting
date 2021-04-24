@@ -1,4 +1,4 @@
-# CodeClimate Test Reporter Prepare Reporting Github Action
+# Prepare Code Climate Test Reporting as a Github Action
 
 Prepares the CodeClimate Test Reporting
 
