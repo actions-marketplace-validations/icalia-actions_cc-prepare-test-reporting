@@ -1,0 +1,19 @@
+name: Prepare Code Climate Test Reporting
+description: Prepares Code Climate Test Reporting on Github Actions
+
+branding:
+  icon: activity
+  color: red
+
+inputs:
+  debug:
+    description: Runs the `before-build` command in debug mode
+    required: false
+  version:
+    description: The version of the tool to use (defaults to the latest version)
+    required: false
+
+runs:
+  using: node12
+  pre: pre.js
+  main: main.js

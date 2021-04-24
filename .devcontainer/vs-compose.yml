@@ -1,0 +1,47 @@
+version: "3.7"
+
+volumes:
+  node_modules:
+  vscode_extensions:
+  vscode_insiders_extensions:
+
+services:
+  lib:
+    image: icalia-actions/cc-prepare-test-reporting:development
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+      args:
+        APP_PATH: ${PWD:-/icalia-actions/cc-prepare-test-reporting}
+        DEVELOPER_UID: ${UID:-1000}
+        DEVELOPER_USERNAME: ${USER:-you}
+    working_dir: ${PWD:-/icalia-actions/cc-prepare-test-reporting}
+    entrypoint: ${PWD:-/icalia-actions/cc-prepare-test-reporting}/bin/dev-entrypoint
+    volumes:
+      - .:${PWD:-/icalia-actions/cc-prepare-test-reporting}
+      - node_modules:${PWD:-/icalia-actions/cc-prepare-test-reporting}/node_modules
+      - vscode_extensions:/home/${USER:-you}/.vscode-server/extensions
+      - vscode_insiders_extensions:/home/${USER:-you}/.vscode-server-insiders/extensions
+    
+    # Keep the stdin open, so we can attach to our app container's process
+    # and do things such as byebug, etc:
+    stdin_open: true
+
+    # Enable sending signals (CTRL+C, CTRL+P + CTRL+Q) into the container:
+    tty: true
+
+    # The command we want to execute by default when running the container
+    # [Optional] Required for ptrace-based debuggers like C++, Go, and Rust
+    cap_add:
+      - SYS_PTRACE
+      - NET_ADMIN
+    security_opt:
+      - seccomp:unconfined
+
+    command: vscode-wait # Éste comando está definido en `bin/dev-entrypoint`
+
+    environment:
+      RUNNER_TEMP: ${PWD:-/icalia-actions/cc-prepare-test-reporting}/tmp
+      RUNNER_TOOL_CACHE: ${PWD:-/icalia-actions/cc-prepare-test-reporting}/cache
+      GIT_EDITOR: code
